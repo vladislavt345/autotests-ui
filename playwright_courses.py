@@ -33,8 +33,14 @@ with sync_playwright() as p:
     page.goto("https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/courses")
     page.wait_for_timeout(2000)
 
-    assert page.inner_text("h6:has-text('Courses')") == "Courses"
-    assert page.inner_text("text=There is no results") == "There is no results"
+    courses_title = page.locator('[data-testid="courses-list-toolbar-title-text"]')
+    assert courses_title.inner_text() == "Courses"
+    
+    empty_state_title = page.locator('[data-testid="courses-list-empty-view-title-text"]')
+    assert empty_state_title.inner_text() == "There is no results"
+
+    icon = page.locator('[data-testid="courses-list-empty-view-icon"]')
+    assert icon.is_visible(), "Empty state icon should be visible"
 
     context.close()
     browser.close()
